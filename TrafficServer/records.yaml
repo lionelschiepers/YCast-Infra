@@ -1,0 +1,16 @@
+records:
+  http:
+    cache:
+      http: 1
+
+  url_remap:
+    remap_required: 0
+
+  reverse_proxy:
+    enabled: 0
+
+  dns:
+    resolv_conf: /etc/resolv-trafficserver.conf
+
+  log:
+    logging_enabled: 3
