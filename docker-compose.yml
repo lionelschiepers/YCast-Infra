@@ -1,0 +1,48 @@
+version: "3.8"
+
+services:
+  pihole:
+    image: pihole/pihole:latest
+    container_name: pihole
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "8088:80/tcp" # Pi-hole admin UI, mapped to port 8088 to avoid conflicts
+    environment:
+      TZ: 'Europe/Brussels' # Change to your timezone
+      WEBPASSWORD: 'pihole' # CHANGE THIS to a secure password
+    volumes:
+      - './PiHole/etc-pihole:/etc/pihole'
+      - './PiHole/etc-dnsmasq.d:/etc/dnsmasq.d'
+    restart: unless-stopped
+
+  ytuner:
+    image: lionelschiepers/ytuner:latest
+    container_name: ytuner
+    restart: unless-stopped
+    # This service runs on port 80 inside the container.
+    # It does not need to be exposed to the host directly,
+    # as Traffic Server will proxy requests to it.
+
+  trafficserver:
+    image: lionelschiepers/trafficserver:latest
+    container_name: trafficserver
+    depends_on:
+      - pihole
+      - ytuner
+    ports:
+      - "8089:8080" # This is the main proxy port you will configure on your audio devices
+    volumes:
+      - ./TrafficServer/records.yaml:/opt/etc/trafficserver/records.yaml
+      - ./TrafficServer/plugin.config:/opt/etc/trafficserver/plugin.config
+    restart: unless-stopped
+
+networks:
+  default:
+    name: vtuner-infra-network
+
+volumes:
+  pihole_etc:
+    name: pihole_etc
+  pihole_dnsmasq:
+    name: pihole_dnsmasq

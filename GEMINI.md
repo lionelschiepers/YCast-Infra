@@ -4,10 +4,10 @@
 
 This repository contains the infrastructure for a home media streaming setup, managed with Docker. It consists of the following services:
 
-*   **Pi-hole:** A network-wide ad blocker. It is configured to run on the host network.
-*   **Traffic Server:** A caching proxy that sits in front of the other services. It is configured to cache HTTP requests and resolving request using Pi-hole.
-*   **YCast:** A service that simulate vTuner API for free (obsolete).
+*   **Pi-hole:** A dns service. This service is used to redirect official vTuner address to local YTuner service running on the same container network.
+*   **Traffic Server:** A caching forward proxy that sits in front of the other services. It is configured to cache HTTP requests and resoles requests using Pi-hole.
 *   **YTuner:** A service that simulate vTuner API for free (new).
+*   **YCast:** A service that simulate vTuner API for free (obsolete - unmaintained).
 
 ## Building and Running
 
