@@ -1,7 +1,0 @@
-services:
-  web:
-    build: .
-    ports:
-      - "20006:8080"
-  trafficserver:
-    image: "trafficserver/trafficserver"
