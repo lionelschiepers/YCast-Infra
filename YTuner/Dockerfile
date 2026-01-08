@@ -18,7 +18,7 @@ RUN unzip -d . ytuner-$VERSION-x86_64-linux.zip
 FROM alpine:latest AS production
 ARG VERSION
 
-RUN apk --no-cache add libc6-compat sqlite-libs
+RUN apk --no-cache add libc6-compat sqlite-libs curl
 
 WORKDIR /app
 
@@ -27,8 +27,9 @@ COPY --from=builder /build/ytuner-$VERSION-x86_64-linux /app
 RUN chmod +x ./ytuner
  
 # Make the TCP/UDP ports to outside the container.
-# EXPOSE 80/tcp
-# EXPOSE 53/udp
+EXPOSE 80/tcp
+EXPOSE 53/udp
 
 # Run YTuner.
+HEALTHCHECK --interval=30s --timeout=10s --start-period=3m --retries=3 CMD curl -f http://localhost/ytuner/empty || exit 1
 CMD ["./ytuner"]
